@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vibe.dev — AI Developer Portfolio</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          body: ['"Inter"', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'monospace'],
+        },
+        colors: {
+          ink: '#050507',
+        },
+        boxShadow: {
+          'glow-violet': '0 0 40px -8px rgba(139,92,246,0.55)',
+          'glow-blue': '0 0 40px -8px rgba(59,130,246,0.5)',
+          'glow-emerald': '0 0 40px -8px rgba(16,185,129,0.5)',
+          'glow-pink': '0 0 40px -8px rgba(236,72,153,0.5)',
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  :root{
+    --grid-line: rgba(255,255,255,0.055);
+  }
+  html, body{
+    background:#050507;
+    font-family:'Inter', sans-serif;
+    color:#e5e7eb;
+    overflow-x:hidden;
+  }
+  ::selection{ background:#8b5cf6; color:#fff; }
+
+  /* dotted / grid background */
+  .bg-grid{
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+  .bg-dots{
+    background-image: radial-gradient(rgba(255,255,255,0.14) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+
+  .glass{
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.09);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+  .glass-strong{
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+  }
+
+  .text-gradient{
+    background: linear-gradient(100deg, #a78bfa 0%, #60a5fa 35%, #34d399 70%, #f472b6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 200% auto;
+    animation: gradientShift 8s ease infinite;
+  }
+  @keyframes gradientShift{
+    0%{ background-position: 0% 50%; }
+    50%{ background-position: 100% 50%; }
+    100%{ background-position: 0% 50%; }
+  }
+
+  .noise-blob{
+    position:absolute;
+    filter: blur(90px);
+    opacity:.35;
+    pointer-events:none;
+  }
+
+  .pulse-dot{
+    box-shadow: 0 0 0 0 rgba(52,211,153,0.65);
+    animation: pulseDot 2s infinite;
+  }
+  @keyframes pulseDot{
+    0%{ box-shadow: 0 0 0 0 rgba(52,211,153,0.55); }
+    70%{ box-shadow: 0 0 0 10px rgba(52,211,153,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(52,211,153,0); }
+  }
+
+  .card-hover{
+    transition: transform .35s cubic-bezier(.2,.8,.2,1), border-color .35s ease, box-shadow .35s ease, background .35s ease;
+  }
+  .card-hover:hover{
+    transform: translateY(-6px);
+    border-color: rgba(167,139,250,0.45);
+    box-shadow: 0 20px 50px -20px rgba(139,92,246,0.35);
+    background: rgba(255,255,255,0.055);
+  }
+
+  .neon-logo{
+    text-shadow: 0 0 8px rgba(167,139,250,0.9), 0 0 22px rgba(96,165,250,0.55);
+  }
+
+  .caret::after{
+    content:'▍';
+    color:#34d399;
+    animation: blink 1s steps(1) infinite;
+    margin-left:2px;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .terminal-tab{
+    transition: all .25s ease;
+  }
+  .terminal-tab.active{
+    color:#fff;
+    border-color: rgba(167,139,250,0.6);
+    background: rgba(139,92,246,0.12);
+  }
+
+  .skill-bar-fill{
+    animation: fillBar 1.4s ease forwards;
+    width:0%;
+  }
+  @keyframes fillBar{
+    to{ width: var(--fill); }
+  }
+
+  input, textarea{
+    background: rgba(255,255,255,0.03);
+  }
+  input:focus, textarea:focus{
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(139,92,246,0.5);
+  }
+
+  .code-line{ white-space:pre; }
+
+  @keyframes floatY{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-14px); }
+  }
+  .float{ animation: floatY 6s ease-in-out infinite; }
+
+  .marquee-track{
+    animation: marquee 26s linear infinite;
+  }
+  @keyframes marquee{
+    from{ transform: translateX(0); }
+    to{ transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+
+  ::-webkit-scrollbar{ width:10px; }
+  ::-webkit-scrollbar-track{ background:#050507; }
+  ::-webkit-scrollbar-thumb{ background:linear-gradient(#7c3aed,#2563eb); border-radius:8px; }
+</style>
+</head>
+
+<body class="bg-ink text-slate-200 antialiased selection:bg-violet-500">
+
+<!-- ================= BACKGROUND BLOBS ================= -->
+<div class="fixed inset-0 -z-10 overflow-hidden">
+  <div class="absolute inset-0 bg-dots opacity-[0.15]"></div>
+  <div class="noise-blob w-[500px] h-[500px] bg-violet-600 top-[-100px] left-[-120px]"></div>
+  <div class="noise-blob w-[450px] h-[450px] bg-blue-600 top-[20%] right-[-140px]"></div>
+  <div class="noise-blob w-[420px] h-[420px] bg-emerald-500 bottom-[5%] left-[10%]"></div>
+  <div class="noise-blob w-[380px] h-[380px] bg-pink-600 bottom-[-120px] right-[10%]"></div>
+</div>
+
+<!-- ================= HEADER ================= -->
+<header id="top" class="fixed top-0 inset-x-0 z-50">
+  <div class="max-w-7xl mx-auto px-5 lg:px-8 mt-4">
+    <div class="glass-strong rounded-2xl px-5 py-3.5 flex items-center justify-between shadow-2xl shadow-black/40">
+
+      <a href="#top" class="flex items-center gap-2 group">
+        <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 via-blue-500 to-emerald-400 flex items-center justify-center text-xs font-bold text-white font-mono group-hover:scale-110 transition-transform">&lt;/&gt;</span>
+        <span class="font-display font-bold text-lg tracking-tight text-white neon-logo">vibe<span class="text-violet-400">.</span>dev</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-slate-300">
+        <a href="#projects" class="hover:text-white transition-colors relative group">Проекты
+          <span class="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-violet-400 to-emerald-400 group-hover:w-full transition-all"></span>
+        </a>
+        <a href="#stack" class="hover:text-white transition-colors relative group">Стек
+          <span class="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-violet-400 to-emerald-400 group-hover:w-full transition-all"></span>
+        </a>
+        <a href="#vibe" class="hover:text-white transition-colors relative group">Vibe / Философия
+          <span class="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-violet-400 to-emerald-400 group-hover:w-full transition-all"></span>
+        </a>
+        <a href="#contact" class="hover:text-white transition-colors relative group">Контакты
+          <span class="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-violet-400 to-emerald-400 group-hover:w-full transition-all"></span>
+        </a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="#contact" class="hidden sm:inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 text-white shadow-lg shadow-violet-900/40 transition-all hover:shadow-glow-violet">
+          <i data-lucide="sparkles" class="w-4 h-4"></i> Hire Me
+        </a>
+        <button id="menuBtn" class="md:hidden w-10 h-10 rounded-lg glass flex items-center justify-center">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- mobile menu -->
+    <div id="mobileMenu" class="hidden md:hidden mt-2 glass-strong rounded-2xl p-4 flex flex-col gap-1 text-sm font-medium">
+      <a href="#projects" class="px-3 py-2.5 rounded-lg hover:bg-white/5">Проекты</a>
+      <a href="#stack" class="px-3 py-2.5 rounded-lg hover:bg-white/5">Стек</a>
+      <a href="#vibe" class="px-3 py-2.5 rounded-lg hover:bg-white/5">Vibe / Философия</a>
+      <a href="#contact" class="px-3 py-2.5 rounded-lg hover:bg-white/5">Контакты</a>
+      <a href="#contact" class="mt-2 text-center px-3 py-2.5 rounded-lg bg-gradient-to-r from-violet-600 to-blue-600 text-white">Hire Me</a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="relative pt-44 pb-28 px-5 lg:px-8 bg-grid">
+  <div class="max-w-5xl mx-auto text-center">
+
+    <div class="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs font-mono text-emerald-300 mb-8">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
+      Available for AI Projects / Vibecoding
+    </div>
+
+    <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight text-white">
+      Turning <span class="text-gradient">vibes</span> into<br class="hidden sm:block">
+      production code with AI
+    </h1>
+
+    <p class="mt-7 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto font-mono min-h-[3rem]">
+      <span id="typedText" class="text-slate-300"></span><span class="caret"></span>
+    </p>
+
+    <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="#projects" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-violet-600 via-blue-600 to-emerald-500 text-white font-semibold shadow-lg shadow-violet-900/40 hover:shadow-glow-violet hover:-translate-y-0.5 transition-all">
+        <i data-lucide="rocket" class="w-4 h-4"></i> Посмотреть проекты
+      </a>
+      <button id="copyPromptBtn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl glass font-semibold text-slate-200 hover:border-violet-400/50 hover:text-white transition-all">
+        <i data-lucide="terminal" class="w-4 h-4"></i> Скопировать Prompt / Контакт
+      </button>
+    </div>
+
+    <div class="mt-16 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-slate-500 text-xs font-mono uppercase tracking-widest">
+      <span class="flex items-center gap-2"><i class="fa-solid fa-brain text-violet-400"></i> Claude Opus / Sonnet</span>
+      <span class="flex items-center gap-2"><i class="fa-solid fa-code text-blue-400"></i> Cursor IDE</span>
+      <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-emerald-400"></i> Next.js Edge</span>
+      <span class="flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-pink-400"></i> v0.dev</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TECH STACK ================= -->
+<section id="stack" class="relative py-24 px-5 lg:px-8">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <span class="text-xs font-mono uppercase tracking-[0.3em] text-violet-400">AI Tech Stack</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mt-3">Инструменты, которыми я живу</h2>
+      <p class="text-slate-400 mt-3 max-w-xl mx-auto">Не пишу код с нуля — оркеструю модели, промпты и агентов, чтобы получить production-ready результат за часы, а не недели.</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5" id="stackGrid">
+      <!-- cards injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ================= VIBE TERMINAL ================= -->
+<section class="relative py-24 px-5 lg:px-8">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-12">
+      <span class="text-xs font-mono uppercase tracking-[0.3em] text-emerald-400">Live Sandbox</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mt-3">Vibe Terminal <span class="text-gradient">/ AI Prompt Sandbox</span></h2>
+      <p class="text-slate-400 mt-3 max-w-xl mx-auto">Так выглядит мой рабочий процесс: промпт → генерация → рефактор → деплой.</p>
+    </div>
+
+    <div class="glass-strong rounded-2xl overflow-hidden shadow-2xl shadow-violet-950/30">
+      <!-- tabs -->
+      <div class="flex items-center gap-2 px-4 pt-4 overflow-x-auto">
+        <button class="term-tab terminal-tab active px-4 py-2 rounded-t-lg border border-b-0 border-transparent text-sm font-mono text-slate-400 whitespace-nowrap" data-tab="0">landing_page.prompt</button>
+        <button class="term-tab terminal-tab px-4 py-2 rounded-t-lg border border-b-0 border-transparent text-sm font-mono text-slate-400 whitespace-nowrap" data-tab="1">refactor_api.prompt</button>
+        <button class="term-tab terminal-tab px-4 py-2 rounded-t-lg border border-b-0 border-transparent text-sm font-mono text-slate-400 whitespace-nowrap" data-tab="2">deploy.sh</button>
+      </div>
+
+      <!-- window -->
+      <div class="bg-black/60 border-t border-white/10">
+        <div class="flex items-center gap-2 px-5 py-3 border-b border-white/5">
+          <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+          <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+          <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+          <span class="ml-3 text-xs text-slate-500 font-mono">zsh — vibecoding</span>
+        </div>
+        <div id="termBody" class="p-6 font-mono text-sm leading-relaxed text-slate-300 min-h-[280px] max-h-[280px] overflow-y-auto"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section id="projects" class="relative py-24 px-5 lg:px-8">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <span class="text-xs font-mono uppercase tracking-[0.3em] text-pink-400">Selected Work</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mt-3">Проекты, рождённые из промптов</h2>
+      <p class="text-slate-400 mt-3 max-w-xl mx-auto">Каждый проект — это диалог с моделью, доведённый до продакшена.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="projectsGrid"></div>
+  </div>
+</section>
+
+<!-- ================= VIBE / PHILOSOPHY ================= -->
+<section id="vibe" class="relative py-24 px-5 lg:px-8">
+  <div class="max-w-5xl mx-auto glass-strong rounded-3xl p-8 sm:p-14 overflow-hidden relative">
+    <div class="absolute -top-24 -right-24 w-72 h-72 bg-violet-600/30 rounded-full blur-3xl float"></div>
+    <div class="relative">
+      <span class="text-xs font-mono uppercase tracking-[0.3em] text-blue-400">Философия</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mt-3 mb-8">Vibecoding — это не хаос. Это новый способ мышления.</h2>
+
+      <div class="grid sm:grid-cols-3 gap-6">
+        <div class="border-l-2 border-violet-500/60 pl-4">
+          <i data-lucide="brain-circuit" class="w-6 h-6 text-violet-400 mb-3"></i>
+          <p class="text-slate-300 text-sm leading-relaxed">Идея важнее синтаксиса. Модель пишет код — я думаю об архитектуре, UX и продукте.</p>
+        </div>
+        <div class="border-l-2 border-blue-500/60 pl-4">
+          <i data-lucide="git-branch" class="w-6 h-6 text-blue-400 mb-3"></i>
+          <p class="text-slate-300 text-sm leading-relaxed">Итерация быстрее совершенства. Прототип за 10 минут ценнее плана на неделю.</p>
+        </div>
+        <div class="border-l-2 border-emerald-500/60 pl-4">
+          <i data-lucide="shield-check" class="w-6 h-6 text-emerald-400 mb-3"></i>
+          <p class="text-slate-300 text-sm leading-relaxed">Но продакшен требует дисциплины: тесты, ревью и понимание каждой строки, что генерирует ИИ.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="relative py-24 px-5 lg:px-8">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-10">
+      <span class="text-xs font-mono uppercase tracking-[0.3em] text-violet-400">Get in touch</span>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mt-3">Есть идея? Запустим вайб.</h2>
+      <p class="text-slate-400 mt-3">Опишите проект — отвечу с планом и первым прототипом.</p>
+    </div>
+
+    <form id="contactForm" class="glass-strong rounded-2xl p-6 sm:p-8 space-y-5">
+      <div class="flex items-center gap-2 text-xs font-mono text-slate-500 mb-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-red-500/70"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/70"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-green-500/70"></span>
+        <span class="ml-2">~/contact --new-message</span>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-5">
+        <div>
+          <label class="block text-xs font-mono text-slate-400 mb-2">name</label>
+          <input required type="text" placeholder="Ваше имя" class="w-full rounded-xl border border-white/10 px-4 py-3 text-sm text-white placeholder:text-slate-600 font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-slate-400 mb-2">contact</label>
+          <input required type="text" placeholder="Telegram / Email" class="w-full rounded-xl border border-white/10 px-4 py-3 text-sm text-white placeholder:text-slate-600 font-mono">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-mono text-slate-400 mb-2">message</label>
+        <textarea required rows="4" placeholder="// Опишите вайб проекта..." class="w-full rounded-xl border border-white/10 px-4 py-3 text-sm text-white placeholder:text-slate-600 font-mono resize-none"></textarea>
+      </div>
+
+      <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-violet-600 via-blue-600 to-emerald-500 text-white font-semibold shadow-lg shadow-violet-900/40 hover:shadow-glow-violet transition-all">
+        <i data-lucide="send" class="w-4 h-4"></i> Отправить сообщение
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="relative border-t border-white/10 py-12 px-5 lg:px-8">
+  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+    <a href="#top" class="flex items-center gap-2">
+      <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 via-blue-500 to-emerald-400 flex items-center justify-center text-xs font-bold text-white font-mono">&lt;/&gt;</span>
+      <span class="font-display font-bold text-white neon-logo">vibe<span class="text-violet-400">.</span>dev</span>
+    </a>
+
+    <div class="flex items-center gap-3">
+      <a href="#" class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:text-white hover:border-violet-400/50 hover:-translate-y-1 transition-all"><i class="fa-brands fa-github"></i></a>
+      <a href="#" class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:text-white hover:border-blue-400/50 hover:-translate-y-1 transition-all"><i class="fa-brands fa-telegram"></i></a>
+      <a href="#" class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:text-white hover:border-pink-400/50 hover:-translate-y-1 transition-all"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="#" class="w-10 h-10 rounded-xl glass flex items-center justify-center hover:text-white hover:border-emerald-400/50 hover:-translate-y-1 transition-all"><i class="fa-brands fa-discord"></i></a>
+    </div>
+
+    <p class="text-xs text-slate-500 font-mono text-center sm:text-right">© 2026 vibe.dev — <span class="text-slate-400">built with</span> <span class="text-gradient font-semibold">100% AI vibes</span></p>
+  </div>
+</footer>
+
+<!-- ================= TOAST ================= -->
+<div id="toast" class="fixed bottom-6 right-6 z-[100] translate-y-24 opacity-0 transition-all duration-500 pointer-events-none">
+  <div class="glass-strong rounded-xl px-5 py-4 flex items-center gap-3 shadow-2xl shadow-emerald-900/40 border-emerald-400/30">
+    <div class="w-9 h-9 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+      <i data-lucide="check" class="w-5 h-5 text-emerald-400"></i>
+    </div>
+    <div>
+      <p id="toastTitle" class="text-sm font-semibold text-white">Сообщение отправлено!</p>
+      <p id="toastMsg" class="text-xs text-slate-400">Отвечу в течение дня.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+lucide.createIcons();
+
+/* ---------- mobile menu ---------- */
+const menuBtn = document.getElementById('menuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+menuBtn.addEventListener('click', () => {
+  mobileMenu.classList.toggle('hidden');
+  menuBtn.innerHTML = mobileMenu.classList.contains('hidden')
+    ? '<i data-lucide="menu" class="w-5 h-5"></i>'
+    : '<i data-lucide="x" class="w-5 h-5"></i>';
+  lucide.createIcons();
+});
+document.querySelectorAll('#mobileMenu a').forEach(a => a.addEventListener('click', () => {
+  mobileMenu.classList.add('hidden');
+  menuBtn.innerHTML = '<i data-lucide="menu" class="w-5 h-5"></i>';
+  lucide.createIcons();
+}));
+
+/* ---------- toast helper ---------- */
+function showToast(title, msg){
+  const toast = document.getElementById('toast');
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastMsg').textContent = msg;
+  toast.classList.remove('translate-y-24','opacity-0');
+  toast.classList.add('translate-y-0','opacity-100');
+  setTimeout(() => {
+    toast.classList.add('translate-y-24','opacity-0');
+    toast.classList.remove('translate-y-0','opacity-100');
+  }, 3200);
+}
+
+/* ---------- copy prompt button ---------- */
+document.getElementById('copyPromptBtn').addEventListener('click', () => {
+  const text = "Hi! I'd like to build a project with you using an AI-driven workflow. Contact: hello@vibe.dev";
+  navigator.clipboard?.writeText(text).catch(()=>{});
+  showToast('Скопировано в буфер!', 'Контакт готов к вставке.');
+});
+
+/* ---------- hero typing effect ---------- */
+const phrases = [
+  'Prompt engineer. Full-stack vibecoder. Ship-fast believer.',
+  'Claude + Cursor + Next.js = production за одну ночь.',
+  'Я не гуглю синтаксис — я формулирую намерение.'
+];
+const typedEl = document.getElementById('typedText');
+let pIndex = 0, cIndex = 0, deleting = false;
+
+function typeLoop(){
+  const current = phrases[pIndex];
+  if(!deleting){
+    cIndex++;
+    typedEl.textContent = current.slice(0, cIndex);
+    if(cIndex === current.length){
+      deleting = true;
+      setTimeout(typeLoop, 1600);
+      return;
+    }
+  } else {
+    cIndex--;
+    typedEl.textContent = current.slice(0, cIndex);
+    if(cIndex === 0){
+      deleting = false;
+      pIndex = (pIndex + 1) % phrases.length;
+    }
+  }
+  setTimeout(typeLoop, deleting ? 30 : 55);
+}
+typeLoop();
+
+/* ---------- tech stack cards ---------- */
+const stack = [
+  { name:'Claude', icon:'fa-solid fa-brain', color:'from-violet-500 to-fuchsia-500', level:96, tag:'Daily driver' },
+  { name:'Cursor', icon:'fa-solid fa-i-cursor', color:'from-blue-500 to-cyan-400', level:92, tag:'IDE' },
+  { name:'ChatGPT', icon:'fa-solid fa-comment-dots', color:'from-emerald-400 to-teal-500', level:85, tag:'Ideation' },
+  { name:'v0.dev', icon:'fa-solid fa-shapes', color:'from-pink-500 to-rose-500', level:80, tag:'UI Gen' },
+  { name:'Copilot', icon:'fa-brands fa-github', color:'from-slate-400 to-slate-200', level:88, tag:'Autocomplete' },
+  { name:'Next.js', icon:'fa-solid fa-layer-group', color:'from-white to-slate-400', level:90, tag:'Framework' },
+  { name:'Tailwind', icon:'fa-solid fa-droplet', color:'from-sky-400 to-blue-500', level:94, tag:'Styling' },
+  { name:'Python', icon:'fa-brands fa-python', color:'from-yellow-400 to-blue-400', level:82, tag:'Backend / AI' },
+];
+
+const stackGrid = document.getElementById('stackGrid');
+stack.forEach((s, i) => {
+  const card = document.createElement('div');
+  card.className = 'card-hover glass rounded-2xl p-5 flex flex-col gap-4';
+  card.innerHTML = `
+    <div class="w-11 h-11 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-black/80 text-lg shadow-lg">
+      <i class="${s.icon}"></i>
+    </div>
+    <div>
+      <p class="font-display font-semibold text-white">${s.name}</p>
+      <p class="text-[11px] font-mono text-slate-500 uppercase tracking-wider">${s.tag}</p>
+    </div>
+    <div class="w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
+      <div class="h-full rounded-full bg-gradient-to-r ${s.color} skill-bar-fill" style="--fill:${s.level}%"></div>
+    </div>
+    <p class="text-[11px] font-mono text-slate-500">${s.level}% vibe-fluent</p>
+  `;
+  stackGrid.appendChild(card);
+});
+
+/* ---------- vibe terminal ---------- */
+const termScripts = [
+  [
+    { t:'in', v:'$ vibe new landing --for="AI SaaS startup"' },
+    { t:'out', v:'→ Analyzing brief... reading brand tone: bold, technical, trustworthy.' },
+    { t:'out', v:'→ Generating hero, pricing, and FAQ sections with Claude Sonnet.' },
+    { t:'code', v:'export default function Hero() {\n  return (\n    <section className="bg-slate-950 text-white">\n      <h1 className="text-6xl font-bold">Ship ideas, not tickets.</h1>\n    </section>\n  );\n}' },
+    { t:'ok', v:'✓ 6 sections generated · 0 hallucinated props · Lighthouse 98' },
+  ],
+  [
+    { t:'in', v:'$ vibe refactor api/orders --goal="reduce latency"' },
+    { t:'out', v:'→ Profiling endpoint... found N+1 query in getOrderItems()' },
+    { t:'code', v:'// before\norders.map(o => db.items.find(o.id))\n\n// after — batched\nconst items = await db.items.findMany({ where: { orderId: { in: ids } } });' },
+    { t:'out', v:'→ Applying migration + updating tests (14 passed).' },
+    { t:'ok', v:'✓ p95 latency: 480ms → 96ms' },
+  ],
+  [
+    { t:'in', v:'$ vibe deploy --env=prod --provider=vercel' },
+    { t:'out', v:'→ Running type-check, lint, and unit tests...' },
+    { t:'out', v:'→ Build succeeded in 22.4s · Bundle size -12%' },
+    { t:'out', v:'→ Uploading edge functions to 18 regions...' },
+    { t:'ok', v:'✓ Live at https://project.vibe.dev — deployed by AI, reviewed by human.' },
+  ],
+];
+
+const termBody = document.getElementById('termBody');
+let termTimeout;
+
+function lineHTML(line){
+  if(line.t === 'in') return `<div class="mb-2"><span class="text-emerald-400">➜</span> <span class="text-slate-200">${line.v}</span></div>`;
+  if(line.t === 'out') return `<div class="mb-2 text-slate-500">${line.v}</div>`;
+  if(line.t === 'ok') return `<div class="mb-2 text-emerald-400">${line.v}</div>`;
+  if(line.t === 'code') return `<pre class="mb-3 code-line text-blue-300 bg-white/5 rounded-lg p-3 border border-white/5 overflow-x-auto">${line.v.replace(/</g,'&lt;')}</pre>`;
+  return '';
+}
+
+function renderTerminal(idx){
+  clearTimeout(termTimeout);
+  termBody.innerHTML = '';
+  const script = termScripts[idx];
+  let i = 0;
+  function next(){
+    if(i >= script.length) return;
+    const div = document.createElement('div');
+    div.innerHTML = lineHTML(script[i]);
+    div.style.opacity = 0;
+    div.style.transition = 'opacity .35s ease';
+    termBody.appendChild(div);
+    requestAnimationFrame(() => div.style.opacity = 1);
+    termBody.scrollTop = termBody.scrollHeight;
+    i++;
+    termTimeout = setTimeout(next, script[i-1].t === 'code' ? 700 : 550);
+  }
+  next();
+}
+
+document.querySelectorAll('.term-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.term-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderTerminal(Number(tab.dataset.tab));
+  });
+});
+renderTerminal(0);
+
+/* ---------- projects ---------- */
+const projects = [
+  {
+    title:'PulseCRM',
+    desc:'Лёгкая CRM для инди-фаундеров с AI-скорингом лидов и авто-follow-up письмами.',
+    badge:'Built with Claude + Cursor in 3 hours',
+    color:'from-violet-500/20 to-blue-500/20',
+    tags:['Next.js','Postgres','Claude API'],
+  },
+  {
+    title:'PromptForge',
+    desc:'Песочница для тестирования и версионирования промптов с diff-сравнением ответов.',
+    badge:'Generated UI via v0.dev',
+    color:'from-blue-500/20 to-emerald-500/20',
+    tags:['React','Tailwind','OpenAI'],
+  },
+  {
+    title:'ShipFast Boilerplate',
+    desc:'Стартовый шаблон SaaS: авторизация, платежи и AI-онбординг из коробки.',
+    badge:'Built with Copilot in 1 evening',
+    color:'from-emerald-500/20 to-pink-500/20',
+    tags:['Next.js','Stripe','Auth.js'],
+  },
+  {
+    title:'DevNotes AI',
+    desc:'Заметки разработчика с авто-тегированием и семантическим поиском по эмбеддингам.',
+    badge:'Built with Claude in 4 hours',
+    color:'from-pink-500/20 to-violet-500/20',
+    tags:['Python','FastAPI','pgvector'],
+  },
+  {
+    title:'Terminal Portfolio',
+    desc:'Интерактивное CLI-портфолио прямо в браузере с фейковой файловой системой.',
+    badge:'Vibecoded overnight',
+    color:'from-violet-500/20 to-emerald-500/20',
+    tags:['Vanilla JS','xterm.js'],
+  },
+  {
+    title:'AutoReview Bot',
+    desc:'GitHub Action, который ревьюит PR голосом Claude и предлагает патчи.',
+    badge:'Built with Claude + GitHub Actions',
+    color:'from-blue-500/20 to-pink-500/20',
+    tags:['TypeScript','GitHub API'],
+  },
+];
+
+const projectsGrid = document.getElementById('projectsGrid');
+projects.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'card-hover glass rounded-2xl p-6 flex flex-col gap-4 relative overflow-hidden group';
+  card.innerHTML = `
+    <div class="absolute inset-0 bg-gradient-to-br ${p.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    <div class="relative z-10 flex flex-col gap-4 h-full">
+      <span class="inline-flex items-center gap-1.5 w-fit text-[10px] font-mono uppercase tracking-wide px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-emerald-300">
+        <i data-lucide="zap" class="w-3 h-3"></i> ${p.badge}
+      </span>
+      <h3 class="font-display text-xl font-bold text-white">${p.title}</h3>
+      <p class="text-sm text-slate-400 leading-relaxed flex-1">${p.desc}</p>
+      <div class="flex flex-wrap gap-2">
+        ${p.tags.map(t => `<span class="text-[11px] font-mono px-2 py-1 rounded-md bg-white/5 text-slate-400 border border-white/5">${t}</span>`).join('')}
+      </div>
+      <div class="flex items-center gap-3 pt-2 border-t border-white/5">
+        <a href="#" class="flex-1 text-center text-sm font-semibold px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white transition-colors">
+          <i data-lucide="eye" class="w-3.5 h-3.5 inline -mt-0.5"></i> Preview
+        </a>
+        <a href="#" class="flex-1 text-center text-sm font-semibold px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white transition-colors">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+      </div>
+    </div>
+  `;
+  projectsGrid.appendChild(card);
+});
+
+lucide.createIcons();
+
+/* ---------- contact form ---------- */
+document.getElementById('contactForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  showToast('Сообщение отправлено!', 'Отвечу в течение дня 🚀');
+  e.target.reset();
+});
+</script>
+
+</body>
+</html>
